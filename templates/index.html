@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Content Generator</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+            <div class="logo">🤖</div>
+            <h1>AI Content Generator</h1>
+            <p>Generate Instagram content using Artificial Intelligence</p>
+        </header>
+
+        <section class="input-section">
+
+            <h2>Enter Your Details</h2>
+
+            <label>Enter Your Topic</label>
+            <input
+                type="text"
+                id="topic"
+                placeholder="Example: Artificial Intelligence"
+            >
+
+            <label>Target Audience</label>
+            <input
+                type="text"
+                id="audience"
+                placeholder="Example: College Students"
+            >
+
+            <button id="generateBtn" onclick="generateContent()">
+                ✨ Generate AI Content
+            </button>
+
+            <p id="status"></p>
+
+        </section>
+
+
+        <section class="output-section" id="outputSection">
+
+            <h2>Generated Results</h2>
+
+            <div class="output-card">
+                <h3>📝 Generated Content</h3>
+                <div id="content">Your content will appear here...</div>
+            </div>
+
+            <div class="output-card">
+                <h3>📢 Instagram Caption</h3>
+                <div id="caption">Your caption will appear here...</div>
+            </div>
+
+            <div class="output-card">
+                <h3>#️⃣ Generated Hashtags</h3>
+                <div id="hashtags">Your hashtags will appear here...</div>
+            </div>
+
+        </section>
+
+        <footer>
+            Built using Python + Groq API + HTML + CSS + JavaScript
+        </footer>
+
+    </div>
+
+    <script src="/static/script.js"></script>
+
+</body>
+</html>
