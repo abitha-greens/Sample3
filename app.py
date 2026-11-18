@@ -2,30 +2,27 @@
 import os
 from flask import Flask, render_template, request, jsonify
 from groq import Groq
-from dotenv import load_dotenv
-
-load_dotenv()
 
 app = Flask(__name__)
 
 API_KEY = os.getenv("GROQ_API_KEY")
 
-client = Groq(api_key=API_KEY)
+client = Groq(api_key=API_KEY) if API_KEY else None
 
 
 def generate_response(prompt):
 
+    if not client:
+        raise ValueError("GROQ_API_KEY is not configured.")
+
     response = client.chat.completions.create(
-
         model="openai/gpt-oss-20b",
-
         messages=[
             {
                 "role": "user",
                 "content": prompt
             }
         ],
-
         temperature=0.7
     )
 
@@ -34,7 +31,6 @@ def generate_response(prompt):
 
 @app.route("/")
 def home():
-
     return render_template("index.html")
 
 
@@ -42,16 +38,15 @@ def home():
 def generate():
 
     try:
-
-        data = request.get_json()
+        data = request.get_json(silent=True) or {}
 
         topic = data.get("topic", "").strip()
         audience = data.get("audience", "").strip()
 
         if not topic or not audience:
-            return jsonify({"error": "Please enter all details."}), 400
-
-        # Prompt 1
+            return jsonify({
+                "error": "Please enter all details."
+            }), 400
 
         prompt1 = f"""
         Create simple Instagram content about {topic}.
@@ -59,8 +54,6 @@ def generate():
         """
 
         content = generate_response(prompt1)
-
-        # Prompt 2
 
         prompt2 = f"""
         Create an attractive Instagram caption
@@ -70,8 +63,6 @@ def generate():
         """
 
         caption = generate_response(prompt2)
-
-        # Prompt 3
 
         prompt3 = f"""
         Generate 5 relevant Instagram hashtags
@@ -83,18 +74,18 @@ def generate():
         hashtags = generate_response(prompt3)
 
         return jsonify({
-
             "content": content,
             "caption": caption,
             "hashtags": hashtags
-
         })
 
-    except Exception as e:
+    except Exception:
+        app.logger.exception("Content generation failed")
 
-        return jsonify({"error": str(e)}), 500
+        return jsonify({
+            "error": "Content generation failed. Please check your API configuration and try again."
+        }), 500
 
 
 if __name__ == "__main__":
-
-    app.run(debug=True)
+    app.run(debug=False)
